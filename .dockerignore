@@ -9,7 +9,11 @@ packages/**/dist
 packages/**/.turbo
 packages/**/*.test.*
 .git
+.gitignore
 .github
+.env
+.nyc_output
+coverage
 !.github/scripts
 *.tsbuildinfo
 packages/cli/dist/**/e2e.*
@@ -18,3 +22,4 @@ docker/**/Dockerfile
 .vscode
 cypress
 test-workflows
+README.md
