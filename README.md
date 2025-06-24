@@ -70,3 +70,178 @@ Want to shape the future of automation? Check out our [job posts](https://n8n.io
 **Short answer:** It means "nodemation" and is pronounced as n-eight-n.
 
 **Long answer:** "I get that question quite often (more often than I expected) so I decided it is probably best to answer it here. While looking for a good name for the project with a free domain I realized very quickly that all the good ones I could think of were already taken. So, in the end, I chose nodemation. 'node-' in the sense that it uses a Node-View and that it uses Node.js and '-mation' for 'automation' which is what the project is supposed to help with. However, I did not like how long the name was and I could not imagine writing something that long every time in the CLI. That is when I then ended up on 'n8n'." - **Jan Oberhauser, Founder and CEO, n8n.io**
+
+
+# **n8n Deployment en Render**
+
+Este repositorio contiene una configuración optimizada para deployar [n8n](https://n8n.io) (herramienta de automatización de workflows) en [Render](https://render.com) usando Docker.
+
+## 🚀 Deploy Rápido
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com)
+
+**URL de ejemplo**: [https://n8n-btme.onrender.com](https://n8n-btme.onrender.com)
+
+## 📋 Requisitos
+
+- Cuenta en [GitHub](https://github.com)
+- Cuenta en [Render](https://render.com) (plan gratuito disponible)
+- Fork de este repositorio
+
+## 🛠️ Instrucciones de Deployment
+
+### 1. Fork del Repositorio
+
+1. Haz clic en **"Fork"** en la esquina superior derecha
+2. Selecciona tu cuenta/organización
+3. Crear fork
+
+### 2. Verificar Archivos de Configuración
+
+Este repositorio ya incluye los archivos necesarios:
+
+#### `Dockerfile`
+```dockerfile
+FROM n8nio/n8n:latest
+
+EXPOSE 5678
+```
+
+#### `.dockerignore`
+```
+**/*.md
+**/.env
+.cache
+assets
+node_modules
+packages/node-dev
+packages/**/node_modules
+packages/**/dist
+packages/**/.turbo
+packages/**/*.test.*
+.git
+.gitignore
+.github
+.env
+.nyc_output
+coverage
+!.github/scripts
+*.tsbuildinfo
+packages/cli/dist/**/e2e.*
+docker/compose
+docker/**/Dockerfile
+.vscode
+cypress
+test-workflows
+README.md
+```
+
+### 3. Configurar en Render
+
+1. Ve a [render.com](https://render.com) y haz login
+2. **New** → **Web Service**
+3. **"Connect a repository"** → selecciona tu fork
+4. Configuración:
+   - **Name**: `tu-nombre-de-app` (ej: `mi-n8n`)
+   - **Language**: **Docker**
+   - **Branch**: `main`
+   - **Dockerfile Path**: `./Dockerfile`
+   - **Instance Type**: **Free** (512MB) o **Starter** ($7/mes)
+
+### 4. Variables de Entorno
+
+En Render, agrega estas variables de entorno (**importante**: reemplaza `tu-nombre-de-app` con el nombre real de tu servicio):
+
+| Variable | Valor |
+|----------|-------|
+| `N8N_HOST` | `0.0.0.0` |
+| `N8N_PORT` | `5678` |
+| `N8N_PROTOCOL` | `https` |
+| `N8N_EDITOR_BASE_URL` | `https://tu-nombre-de-app.onrender.com` |
+| `WEBHOOK_URL` | `https://tu-nombre-de-app.onrender.com` |
+| `GENERIC_TIMEZONE` | `America/Guayaquil` |
+| `DB_TYPE` | `sqlite` |
+| `N8N_SECURE_COOKIE` | `false` |
+| `N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS` | `false` |
+| `N8N_RUNNERS_ENABLED` | `true` |
+
+### 5. Deploy
+
+1. Haz clic en **"Create Web Service"**
+2. Espera 3-5 minutos para el build y deployment
+3. Accede a tu aplicación en `https://tu-nombre-de-app.onrender.com`
+
+### 6. Configuración Inicial de n8n
+
+1. Abre tu aplicación en el navegador
+2. Completa el formulario de configuración inicial:
+   - **Email**: tu correo electrónico
+   - **First Name**: tu nombre
+   - **Last Name**: tu apellido
+   - **Password**: contraseña segura (8+ caracteres, 1 número, 1 mayúscula)
+3. ¡Listo para crear workflows!
+
+## 💡 Características
+
+- ✅ **Docker optimizado** para Render
+- ✅ **Base de datos SQLite** persistente
+- ✅ **HTTPS** habilitado automáticamente
+- ✅ **Plan gratuito** disponible (512MB RAM)
+- ✅ **Fácil escalabilidad** a planes pagos
+- ✅ **Variables de entorno** pre-configuradas
+
+## 🔧 Planes Recomendados
+
+| Plan | RAM | CPU | Precio | Recomendado para |
+|------|-----|-----|--------|------------------|
+| **Free** | 512MB | 0.1 | $0/mes | Testing, proyectos personales |
+| **Starter** | 512MB | 0.5 | $7/mes | Proyectos pequeños |
+| **Standard** | 2GB | 1 | $25/mes | Uso profesional |
+
+## 🐛 Solución de Problemas
+
+### Error de memoria durante build
+Si ves errores como `ERR_WORKER_OUT_OF_MEMORY`:
+- Upgrade a plan **Starter** o superior
+- El plan gratuito (512MB) puede ser insuficiente para builds complejos
+
+### n8n no carga
+- Verifica que las variables de entorno estén correctamente configuradas
+- Asegúrate de que `N8N_EDITOR_BASE_URL` use tu URL real de Render
+
+### Problemas de webhooks
+- Confirma que `WEBHOOK_URL` apunte a tu dominio de Render
+- Verifica que `N8N_PROTOCOL` esté en `https`
+
+## 📖 Documentación Adicional
+
+- [Documentación oficial de n8n](https://docs.n8n.io/)
+- [Guía de deployment en Render](https://render.com/docs)
+- [Variables de entorno de n8n](https://docs.n8n.io/hosting/configuration/)
+
+## 🤝 Contribuciones
+
+¡Las contribuciones son bienvenidas! Por favor:
+
+1. Haz fork del proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/nueva-caracteristica`)
+3. Commit tus cambios (`git commit -am 'Agrega nueva característica'`)
+4. Push a la rama (`git push origin feature/nueva-caracteristica`)
+5. Abre un Pull Request
+
+## 📄 Licencia
+
+Este proyecto está basado en [n8n](https://github.com/n8n-io/n8n) que usa la licencia [Sustainable Use License](https://github.com/n8n-io/n8n/blob/master/LICENSE.md).
+
+## ⭐ Soporte
+
+Si este repositorio te fue útil, ¡considera darle una estrella! ⭐
+
+Para problemas o preguntas:
+- Abre un [Issue](../../issues)
+- Consulta la [documentación oficial](https://docs.n8n.io/)
+
+---
+
+**¡Automatiza tus workflows con n8n en Render!** 🚀
+
